@@ -65,6 +65,7 @@ class SignUp extends Component{
                         intent={Intent.PRIMARY}
                         onChange={this.handleChange}
                         value={this.state.email}
+                        autoFocus
                         />
                     <InputGroup
                         id={'password'}

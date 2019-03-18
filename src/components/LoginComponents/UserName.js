@@ -18,22 +18,35 @@ class UserName extends Component{
         return(
             this.props.loadUserName?
             <Spinner size={25}/>:
-            <React.Fragment>
-                    <StyledLink to="/map" content={<button className="bp3-button bp3-minimal bp3-icon-map">Map</button>}/>
-                    <Popover
-                        className="profile-options"
-                        interactionKind={PopoverInteractionKind.HOVER}
-                        popoverClassName="bp3-popover-content-sizing"                
-                        position={Position.BOTTOM}
-                        target={<Button rightIcon={"cog"} className="bp3-button bp3-minimal">{this.props.userInfo.username}</Button>}
-                        content={
-                            <div className="flex flex-column">
-                                <StyledLink to="/profile" content={<div className="bp3-button bp3-minimal bp3-icon-user">Profile</div>}/>
-                                <SignOut/>
-                            </div>
-                        }
-                    />
-                </React.Fragment>
+            this.props.userInfo.uid==="7EtQI6poyZaTq4kuFqfibmVzI5F3"?
+            <Popover
+                    className="profile-options"
+                    interactionKind={PopoverInteractionKind.HOVER}
+                    popoverClassName="bp3-popover-content-sizing"                
+                    position={Position.BOTTOM}
+                    target={<StyledLink to="/admin" content={<button className="bp3-button bp3-minimal bp3-icon-helper-management">Admin</button>}/> }
+                    content={
+                        <div className="flex flex-column">
+                            <SignOut/>
+                        </div>
+                    }
+                />          
+            :<React.Fragment>
+                <StyledLink to="/map" content={<button className="bp3-button bp3-minimal bp3-icon-map">Map</button>}/>
+                <Popover
+                    className="profile-options"
+                    interactionKind={PopoverInteractionKind.HOVER}
+                    popoverClassName="bp3-popover-content-sizing"                
+                    position={Position.BOTTOM}
+                    target={<Button rightIcon={"cog"} className="bp3-button bp3-minimal">{this.props.userInfo.username}</Button>}
+                    content={
+                        <div className="flex flex-column">
+                            <StyledLink to="/profile" content={<div className="bp3-button bp3-minimal bp3-icon-user">Profile</div>}/>
+                            <SignOut/>
+                        </div>
+                    }
+                />
+            </React.Fragment>
         )}
 }
 

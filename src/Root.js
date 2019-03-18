@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter, Route } from 'react-router-dom'
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
@@ -14,7 +15,7 @@ import MapComponent from './components/Main/MapComponent';
 import Contact from './components/Main/Contact';
 import Footer from './components/Main/Footer';
 import Statistics from './components/Main/Statistics';
-
+import Admin from './components/Main/Admin';
 
 const Root = ({ store }) => (
   <Provider store={store}>
@@ -26,6 +27,7 @@ const Root = ({ store }) => (
         <Route path="/statistics" component={Statistics}/>
         <Route path="/map" component={MapComponent}/>
         <Route path="/contact" component={Contact}/>
+        <Route path="/admin" component={Admin}/>
         <Footer/>
       </React.Fragment>  
     </BrowserRouter>

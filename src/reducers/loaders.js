@@ -15,6 +15,7 @@ const global = (state = defaultState, action) => {
                 toastMessage:action.message,
                 showToast:action.show,
                 toastType:action.toastType,
+                toastTime:action.time,
             }
         default:        
             return state;

@@ -21,7 +21,7 @@ class SignOut extends Component{
 
     render(){
         return(
-            <StyledLink onClick={this.signout} to="/" content={<button class="bp3-button bp3-minimal bp3-icon-log-out" onClick={this.signout}>Logout</button>}/>
+            <StyledLink onClick={this.signout} to="/" content={<button className="bp3-button bp3-minimal bp3-icon-log-out" onClick={this.signout}>Logout</button>}/>
         )}
 }
 

@@ -5,6 +5,7 @@
   "dependencies": {
     "@amcharts/amcharts4": "^4.2.1",
     "@blueprintjs/core": "^3.14.1",
+    "@blueprintjs/datetime": "^3.7.2",
     "firebase": "^5.8.6",
     "firebase-tools": "^6.5.0",
     "jquery": "^3.3.1",

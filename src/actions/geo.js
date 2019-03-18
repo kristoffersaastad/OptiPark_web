@@ -1,9 +1,7 @@
 import {fsRef} from '../firebase';
 
 export const getGeo = (lot) => async dispatch =>{
-    fsRef.collection("parkinglots").doc(lot).get()
-    .then((doc)=>{
-        
+    fsRef.collection("parkinglots").doc(lot).onSnapshot((doc)=>{
         let json = JSON.parse(doc.data().json);
         if (doc.exists) {
             dispatch({            
@@ -14,7 +12,7 @@ export const getGeo = (lot) => async dispatch =>{
             console.log("no such document");
             
         }
-    }).catch(()=>console.log("getgeo error"))
+    })
 }
 
 export const writeGeo = (json,name) => async =>{

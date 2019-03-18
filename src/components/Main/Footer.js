@@ -20,14 +20,14 @@ class Footer extends Component{
             if (this.props.showToast) {
                 let toastType = this.props.toastType;
                 let obj = {
-                    autoClose:1500,
+                    autoClose:this.props.toastTime,
                     position: toast.POSITION.BOTTOM_CENTER,
                 }
                 if (toastType==="success") {
                     obj.type = toast.TYPE.SUCCESS;
                 }
                 if (toastType==="error") {
-                    obj.type = toast.TYPE.SUCCESS;
+                    obj.type = toast.TYPE.ERROR;
                 }
                 if(toastType==="default"){
                     obj.type = toast.TYPE.DEFAULT;
@@ -35,7 +35,7 @@ class Footer extends Component{
                 toast(this.props.toastMessage,obj)
                 setTimeout(() => {
                     this.props.changeToaster("",false,"")
-                }, 1500);
+                }, this.props.toastTime);
             }
         }
     }
@@ -49,11 +49,12 @@ class Footer extends Component{
 }
 
 const mapStateToProps = (state) => {    
-    const { showToast, toastMessage, toastType } = state.loaders;
+    const { showToast, toastMessage, toastType, toastTime } = state.loaders;
     return {
         showToast,
         toastMessage,
         toastType,
+        toastTime,
     }
 }
   

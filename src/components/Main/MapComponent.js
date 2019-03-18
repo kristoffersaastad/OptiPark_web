@@ -4,8 +4,12 @@ import {connect} from 'react-redux';
 import {Redirect} from 'react-router-dom'
 import { Map, TileLayer, Marker, Polyline} from 'react-leaflet';
 import L from 'leaflet';
-import { calcBBox, createGraph } from '../../functions/DirectFunctions';
-import { ProgressBar } from '@blueprintjs/core'
+import {createGraph,assignSensor, getPolyline, findNodeCoord, angleBetweenPoints, getDirection, determimeDirection, findNodeIndex, distance, calcBBox} from '../../functions/DirectFunctions';
+import { ProgressBar, Drawer } from '@blueprintjs/core'
+import { toast } from 'react-toastify'
+import MapDrawer from '../SubComponents/MapDrawer';
+import rightIcon from '../../images/rightIcon.png';
+import leftIcon from '../../images/leftIcon.png';
 
 const userIcon = new L.Icon({
     iconUrl:require('../../images/carIcon2.png'),
@@ -35,6 +39,10 @@ class MapComponent extends Component{
 
         this.state = {
             loadingMap:true,
+            currPos:{lat:0,lng:0},
+            direction:'straight',
+            showDrawer:false,
+
         }
     }
 
@@ -43,10 +51,93 @@ class MapComponent extends Component{
     }
 
     componentDidUpdate(prevProps, prevState){
-        if (prevProps.sensors!==this.props.sensors) {
-            if(this.props.sensors&&this.props.support&&this.props.corners)this.setState({g:createGraph(this.props.sensors, this.props.support),bbox: calcBBox(this.props.corners), loadingMap:!this.state.loadingMap})        
+        if (prevProps.sensors!==this.props.sensors) {            
+            if(this.props.sensors&&this.props.support&&this.props.corners&&this.state.loadingMap)this.setState({g:createGraph(this.props.sensors, this.props.support),bbox: calcBBox(this.props.corners), loadingMap:!this.state.loadingMap})        
         }
+        if (prevState.currPos!=this.state.currPos) {
+            this.assignSensor();    
+       }
     }
+
+
+    assignSensor = () =>{
+        const assigned = assignSensor(this.state.g,this.props.sensors,this.props.support,[this.state.currPos.lat,this.state.currPos.lng])
+        const spot = assigned[0];
+        const path  = assigned[1];
+        if(spot.length===0&& path.length===0){
+            toast("The parking lot is full",{
+                type: toast.TYPE.ERROR,
+                autoClose: 1500,
+            })
+        }
+                
+        if (distance([this.state.currPos.lng, this.state.currPos.lng],findNodeCoord(this.props.sensors,spot))<4) {
+            this.props.changeSpotStatus("Library", findNodeIndex(this.props.sensors,spot),1);
+            this.setState({path:null, direction:null, currDistance:null, spot, totDistance:null,showDistance:false, latlngs:null})
+            return null;
+        }
+        
+
+        //Finding point coordinates to find angle between first->second, and second-> third
+        let p1 = this.getNodeCoord(path[1][0]);
+        let p2 = this.getNodeCoord(path[2][0]);
+        let dir1 = getDirection(angleBetweenPoints(this.state.currPos,p1));
+        let dir2 = getDirection(angleBetweenPoints(p1,p2));
+        console.log(dir1, dir2);
+        
+        let direction = determimeDirection(dir1,dir2); 
+        
+        if (direction==="delete") {
+            path.splice(1,1);
+        }
+        
+        let dist = 0;
+        for (let i = 1; i < path.length-1; i++) {
+            p1 = this.getNodeCoord(path[i][0]);
+            p2 = this.getNodeCoord(path[i+1][0]);
+            dir1 = getDirection(angleBetweenPoints(this.state.currPos,p1));
+            dir2 = getDirection(angleBetweenPoints(p1,p2));
+            direction = determimeDirection(dir1,dir2); 
+            dist = path[i][1];            
+            if (direction==="Right"||direction==="Left") {
+                break
+            }
+        }
+        
+        this.setState({
+            path,
+            spot,
+            show:this.state.showDistance?false:true,
+            showDistance:true,
+            totDistance:path[path.length-1][1],
+            currDistance:dist,
+            direction,
+            directionIcon:direction==="Right"?rightIcon:leftIcon,
+            latlngs:getPolyline(this.state.currPos,assigned[1], this.props.sensors, this.props.support),
+                    
+        },
+        )
+    }
+
+    getNodeCoord = (nodeName) => {
+        let coord = {}
+        if (nodeName.split("")[0]==="h") {
+            coord = findNodeCoord(this.props.support,nodeName)
+            coord = {lat:coord[0],lng:coord[1]}
+        }
+        if (nodeName.split("")[0]==="s") {
+            coord = findNodeCoord(this.props.sensors,nodeName)
+            coord = {lat:coord[0],lng:coord[1]}
+        }
+        return coord
+    }
+
+    changeUserPos = (map) => {
+        const lat = map.latlng.lat;
+        const lng = map.latlng.lng;        
+        this.setState({currPos:{lat, lng}})
+    }
+
 
     render(){
         if (!this.props.login) {
@@ -56,15 +147,35 @@ class MapComponent extends Component{
         <div className="map-container">
             {this.state.loadingMap?
             <div className="progressBar">Loading map<ProgressBar/></div>
-            :<Map bounds={this.state.bbox} style={{width:"100%", height:'100%'}}>
+            :<Map bounds={this.state.bbox} style={{width:"100%", height:'100%', zIndex:2}} onClick={this.changeUserPos}>
                 <TileLayer
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+                {this.state.path&&this.state.latlngs?
+                    <Polyline
+                    positions={this.state.latlngs}
+                    />
+                :null}
                 {Object.keys(this.props.sensors).map((item)=>
-                    <Marker onMouseOver={this.hoverMarker} id={this.props.sensors[item].properties.name} key={item} onClick={this.selectSpot} position={[this.props.sensors[item].geometry.coordinates[0],this.props.sensors[item].geometry.coordinates[1]]} icon={this.props.sensors[item].properties.status===0?sensorIconAvaliable:sensorIconTaken}></Marker>
+                    <Marker id={this.props.sensors[item].properties.name} key={item} position={[this.props.sensors[item].geometry.coordinates[0],this.props.sensors[item].geometry.coordinates[1]]} icon={this.props.sensors[item].properties.status===0?sensorIconAvaliable:sensorIconTaken}></Marker>
                 )}
+                {this.state.path&&this.state.latlngs?
+                    Object.keys(this.state.path).map((item)=>{
+                        let coord = []
+                        
+                        if (this.state.path[item][0].split("")[0]==="h") {
+                            coord = findNodeCoord(this.props.support,this.state.path[item][0])
+                            return(
+                            <Marker id={this.props.support[item].properties.name} key={"supp"+item} position={{lat:coord[0],lng:coord[1]}} icon={nodeIcon}/>
+                            )
+                        }
+                    })
+                :null}
+                <Marker icon={userIcon} position={this.state.currPos}/>
             </Map>}
+            {this.state.directionIcon?<img className="direction-icon" src={this.state.directionIcon}/>:null}
+            <MapDrawer/>
         </div>
     )}
 }

@@ -1,20 +1,8 @@
 import {auth, fsRef} from '../firebase';
 
-export const fetchInfo = () => dispatch =>{
-    fsRef.collection("users").doc(auth.currentUser.uid).get()
-        .then((doc)=>{
-            dispatch({
-                type:'USER-INFO',
-                payload:doc.data()
-            })
-        })
-        .catch(err=>{
-            console.log("fetch error",err);
-            
-        })
-}
 
-export const changeLogin = (status) => dispatch =>{
+
+export const changeLogin = (status) => async dispatch =>{
     dispatch({
         type:'LOGIN',
         payload:status,
@@ -28,7 +16,7 @@ export const changeLogin = (status) => dispatch =>{
     
 }
 
-export const createUser = (email,password) => {  
+export const createUser = (email,password) => async dispatch=>{  
     auth.createUserWithEmailAndPassword(email,password)
     // .then(()=>{
     //     auth.signInWithEmailAndPassword(email,password)
@@ -42,13 +30,38 @@ export const createUser = (email,password) => {
     })
     .catch((err) =>{
         console.log('create error',err);
+        dispatch({
+            type:'TOASTER',
+            message:err.message,
+            show:true,
+            toastType:"error",
+            time:3000,
+        })
     });
+}
+
+export const getUser = (uid) => async dispatch =>{
+    fsRef.collection("users").doc(uid).get()
+    .then((doc)=>{
+        console.log(doc.data());
+        dispatch({
+            type:'SINGLE-USER',
+            payload:doc.data()
+        })
+    })
 }
 
 export const signInUser = (email,password) => async dispatch => {
     auth.signInWithEmailAndPassword(email, password)
     .catch((err) =>{
         console.log('Signin error',err);
+        dispatch({
+            type:'TOASTER',
+            message:err.message,
+            show:true,
+            toastType:"error",
+            time:3000,
+        })
     });
   
 }
@@ -64,7 +77,14 @@ export const signOutUser = () => async dispatch => {
             payload:true
         })
     })
-    .catch(() =>{
-        console.log('Signout Error');
+    .catch((err) =>{
+        console.log('Signout Error',err);
+        dispatch({
+            type:'TOASTER',
+            message:err.message,
+            show:true,
+            toastType:"error",
+            time:3000,
+        })
     });
 }

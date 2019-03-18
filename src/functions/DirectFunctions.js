@@ -4,8 +4,7 @@ export const latlngDist = (from, to) => {
     return Math.sqrt(Math.pow(from[0]-to[0],2)+Math.pow(from[1]-to[1],2))
 }
 
-export const distance = (from, to) =>{
-    
+export const distance = (from, to) =>{    
     let nfrom = [from[0]*Math.PI/180, from[1]*Math.PI/180];
     let nto  = [to[0]*Math.PI/180,to[1]*Math.PI/180];
 
@@ -190,18 +189,7 @@ export const assignSensor = (g, sensors, support, userPos) =>{
                 }
             }
         })
-        
-        // let sensor_coord = sensors[Object.keys(sensors).find((item)=>sensors[item].properties.name===sensor)].geometry.coordinates;
 
-        // if (path.length>4) {
-
-        //     let c1 = support[Object.keys(support).find((item)=>support[item].properties.name===path[1][0])].geometry.coordinates;
-        //     let c2 = support[Object.keys(support).find((item)=>support[item].properties.name===path[2][0])].geometry.coordinates;    
-        //     if (distance(c1,sensor_coord)>distance(c2,sensor_coord)) {
-        //         path[2][1] = path[2][1]-path[1][1];
-        //         path.splice(1,1);
-        //     }
-        // }
         return [sensor, path];
 }
 const addUserPosGraph = (g, pos, support) => {
@@ -258,7 +246,6 @@ export const createGraph = (sensors, support) => {
             }
         }
     }
-    console.log(g);
     
     return g;
 }
@@ -266,24 +253,18 @@ export const createGraph = (sensors, support) => {
 export const getPolyline  = (userPos,path, sensors, support) =>{
     let polyline = [];
     polyline.push(userPos);
-    Object.keys(path).forEach((item)=>{
-        if (path[item][0].split("")[0]==="s") {
-            Object.keys(sensors).find((key)=>{
-                if (sensors[key].properties.name===path[item][0]) {
-                    polyline.push(sensors[key].geometry.coordinates);
-                }
-                return null;
-            })
+    
+    Object.keys(path).forEach((item)=>{        
+        if (path[item][0].split("")[0]==="s") {                
+            let nodeCoord = findNodeCoord(sensors,path[item][0])
+            polyline.push({lat:nodeCoord[0],lng:nodeCoord[1]});
         }
         if (path[item][0].split("")[0]==="h") {
-            Object.keys(support).find((key)=>{
-                if (support[key].properties.name===path[item][0]) {
-                    polyline.push(support[key].geometry.coordinates);
-                }
-                return null;
-            })
+            let nodeCoord = findNodeCoord(support,path[item][0])
+            polyline.push({lat:nodeCoord[0],lng:nodeCoord[1]});
         }
     })
+    
     return polyline;
     
 }
@@ -306,4 +287,62 @@ export const calcBBox = (points) =>{
         }
     })        
     return [ul, lr];
+}
+
+export const findNodeCoord = (nodes, nodeName) =>{
+    let coord = []
+    Object.keys(nodes).find((key)=>{    
+        if (nodes[key].properties.name===nodeName) {            
+            coord = nodes[key].geometry.coordinates;
+        }
+    })
+    return coord;
+}
+
+export const findNodeIndex = (nodes, nodeName) => {
+    let index = 0;
+    Object.keys(nodes).find((key)=>{
+        if (nodes[key].properties.name===nodeName) {
+            index = key;
+        }
+    })
+    return index;
+}
+// x=Rcosϕcosλ,y=Rcosϕsinλ,z=Rsinϕ
+export const angleBetweenPoints=(p1,p2)=>{
+    const dLng = p2.longitude - p1.longitude;
+    const x = Math.cos(p2.lat)*Math.sin(dLng);
+    const y = Math.cos(p1.lat)*Math.sin(p2.lat)-Math.sin(p1.lat)*Math.cos(p2.lat)*Math.cos(dLng)
+    
+    let bearing = Math.atan2(x,y);
+
+    bearing = toDegrees(bearing);
+    bearing = (bearing + 360) % 360;
+    bearing = 360-bearing;
+    return bearing;
+}
+
+function toDegrees(radians){
+  var pi = Math.PI;
+  return radians * (180/pi);
+}
+
+export const getDirection = (angle) =>{
+    if (angle<90) {
+        return 1//"straigt"
+    }else if(angle<180){
+        return 2//"right"
+    }else if(angle<270){
+        return 3//"backwards"
+    }else{
+        return 4//"left"
+    }
+}
+
+export const determimeDirection = (dir1,dir2) => {
+    let sum = dir1-dir2   
+    if (sum===0)return "straight"
+    else if (sum===-1||sum===3) return "Right"
+    else if (sum===-2||sum===2) return "delete"
+    else if (sum===-3||sum===1) return "Left"
 }

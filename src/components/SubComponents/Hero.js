@@ -16,13 +16,7 @@ class Hero extends React.Component{
     render(){
         return(
             <div>
-                <div className="hero"></div>
-                <Fade cascade>
-                    <div className="hero-text">
-                        <div className="title-text"><b><span style={{color:'#4580E6'}}>Opti</span>Park</b></div>
-                        <div className="title-subtext">Parking made easy</div>
-                    </div>
-                </Fade>
+                
             </div>
         );
     }

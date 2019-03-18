@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Form, FormControl, FormGroup, Button} from 'react-bootstrap';
+import {InputGroup, Button} from '@blueprintjs/core'
 import $ from 'jquery';
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
@@ -259,21 +259,14 @@ class Charts extends Component {
           <div className="subtext__container" style={{marginTop: "50px", marginBottom: "0px"}}>
             {this.state.loading ?  null : <div className="subtext">Number of available spots</div>}
           </div>
-            <Form className="flex" onSubmit={this.handleSubmit} >
-
-              <FormGroup controlId="formBasicEmail">
-                <FormControl type="text" placeholder="Enter backwards"  id="daysBackward" onChange={this.handleChange} />
-
-              </FormGroup>
-
-              <FormGroup controlId="formBasicPassword">
-                <FormControl type="text" placeholder="Enter forwards" id="daysForward" onChange={this.handleChange}  />
-              </FormGroup>
+            <form className="flex" onSubmit={this.handleSubmit} >
+              <InputGroup type="text" placeholder="Enter backwards"  id="daysBackward" onChange={this.handleChange} />
+              <InputGroup type="text" placeholder="Enter forwards" id="daysForward" onChange={this.handleChange}  />
 
               <Button variant="primary" type="submit">
                 Make changes
               </Button>
-            </Form>
+            </form>
           <div id="chartdiv2" style={{ width: "90%", height: "500px" }}></div>
 
         </div>

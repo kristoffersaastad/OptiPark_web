@@ -38,7 +38,21 @@ const global = (state = defaultState, action) => {
                 ...state,
                 headerBkg:action.payload
             }
-        
+        case 'GET-CHAT':
+            return{
+                ...state,
+                chatInfo:action.payload,
+            }
+        case 'CURRENT-CHAT':
+            return{
+                ...state,
+                chatMessages:action.payload,
+            }
+        case 'ALL-CHATS':
+            return{
+                ...state,
+                allChats:action.payload,
+            }
         default:        
             return state;
     }

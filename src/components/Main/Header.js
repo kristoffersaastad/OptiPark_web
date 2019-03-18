@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {auth} from '../../firebase';
-import { fetchInfo, changeLogin } from '../../actions/login'
+import { changeLogin } from '../../actions/login'
+import { fetchBookings, fetchCars, fetchInfo } from '../../actions/fetchers'
 import { getGeo } from '../../actions/geo';
 import SignUp from '../LoginComponents/SignUp'
 import SignIn from '../LoginComponents/SignIn'
 import StyledLink from '../SubComponents/StyledLink'
 import UserName from '../LoginComponents/UserName';
+import { Fade } from 'react-reveal'
 
 class Header extends Component{
 
@@ -31,6 +33,8 @@ class Header extends Component{
                 this.props.changeLogin(true);
                 window.localStorage.setItem("LOGIN","yes")
                 this.props.fetchInfo();
+                this.props.fetchCars();
+                this.props.fetchBookings();
                 
             }else{
                 this.props.changeLogin(false);
@@ -41,7 +45,8 @@ class Header extends Component{
 
     render(){
         return(
-            <nav className="bp3-navbar bp3-dark" style={this.props.headerBkg?{backgroundColor:'rgba(0,0,0,0)', boxShadow:'none'}:{backgroundColor:'',boxShadow:''}}>
+            <Fade>
+            <nav className={"bp3-navbar bp3-dark "} style={this.props.headerBkg?{color: '#f5f8fa',backgroundColor:'rgba(0,0,0,0)', boxShadow:'none'}:{color: '#f5f8fa',backgroundColor:'',boxShadow:''}}>
                 <div style={{margin: '0 auto', width: '100%'}}>
                     <div className="bp3-navbar-group bp3-align-left">
                         <div className="bp3-navbar-heading">OptiPark</div>
@@ -65,6 +70,7 @@ class Header extends Component{
                     </div>
                 </div>
             </nav>
+            </Fade>
     )}
 }
 
@@ -81,7 +87,7 @@ const mapStateToProps = (state) => {
 }
   
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ fetchInfo, changeLogin, getGeo }, dispatch);
+    return bindActionCreators({ fetchInfo, fetchCars, fetchBookings, changeLogin, getGeo }, dispatch);
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

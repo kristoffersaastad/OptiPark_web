@@ -6,8 +6,8 @@ import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } 
 import {Fade} from 'react-reveal'
 import Hero from '../SubComponents/Hero';
 import { changeHeaderBkg } from '../../actions/global';
-import { Icon } from '@blueprintjs/core';
-
+import HomeText from '../SubComponents/HomeText';
+import {Icon} from '@blueprintjs/core'
 
 class Home extends Component{
 
@@ -19,6 +19,8 @@ class Home extends Component{
             scroll:0,
             radioColor:'white',
             above:true,
+            show:false,
+            currDiv:0,
         }
     }
 
@@ -34,8 +36,14 @@ class Home extends Component{
 
     }
 
-    handleMouseMove = () => {
-
+    handleMouseMove = (e) => {
+        if (e.screenY>window.innerHeight&&!this.state.showUp) {
+            this.setState({showUp:!this.state.showUp})
+        }
+        if (e.screenY<window.innerHeight&&this.state.showUp) {
+            this.setState({showUp:!this.state.showUp})
+        }
+        
     }
 
     handleScroll = () => {
@@ -47,30 +55,32 @@ class Home extends Component{
         }
     }
 
-    scrollToRef = (e) => {
-        window.scrollTo(0, 1);
+    handleSetActive = (to) => {
+        console.log("click");        
+    }
+    handleRadioSelected = (e) => {
+        console.log(e.target.id.replace("div",""));
+        this.setState({currDiv:e.target.id.replace("div","")})
     }
 
-    handleSetActive = (to) => {
-        console.log("click");
-        
-        
+    scrollTop = () => {
+        window.scrollTo({top:0, left:0, behavior:'smooth'});
     }
 
     render(){
+        console.log(this.state.showUp);
+        
         return(
         <div className="home-container">
-            <Hero/>
-            <div className="radio-selectors">
-                <Link className="radio-selectors-item" style={{backgroundColor:this.state.radioColor}} smooth to={"div0"} offset={-150} duration={500} onSetActive={this.handleSetActive}></Link>
-                <Link className="radio-selectors-item" style={{backgroundColor:this.state.radioColor}} smooth to={"div1"} offset={-150} duration={500} onSetActive={this.handleSetActive}></Link>
-                <Link className="radio-selectors-item" style={{backgroundColor:this.state.radioColor}} smooth to={"div2"} offset={-150} duration={500} onSetActive={this.handleSetActive}></Link>
-            </div>
-            <div className="sub-container-home">
-                <Element className="text-container-home" name="div0">Test</Element>
-                <Element className="text-container-home" name="div1">Test</Element>
-                <Element className="text-container-home" name="div2">Test</Element>
-            </div>
+            <div className="hero"></div>
+            <Fade cascade>
+                <div className="hero-text">
+                    <div className="title-text"><b><span style={{color:'#4580E6'}}>Opti</span>Park</b></div>
+                    <div className="title-subtext">Parking made easy</div>
+                </div>
+            </Fade>
+            <HomeText radioColor={this.state.radioColor}/>
+            {this.state.showUp?<Icon style={{color:""}} onClick={this.scrollTop} icon="upload" iconSize={18} className="scrollTopIcon showUp"/>:null}
         </div>
     )}
 }

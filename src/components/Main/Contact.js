@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {TextArea, InputGroup, Radio, RadioGroup, Button} from '@blueprintjs/core'
+import {TextArea, InputGroup, Radio, RadioGroup, Button, Icon} from '@blueprintjs/core'
 import { submitContactForm } from '../../actions/global';
+import { Fade } from 'react-reveal'
+import Chat from '../SubComponents/Chat';
 
 class Contact extends Component{
 
@@ -40,8 +42,10 @@ class Contact extends Component{
         }
     }
 
-    handleTopicChange = (e) => {             
-        this.setState({topic:parseInt(e.target.value),topicText:e.target.label})
+    handleTopicChange = (e) => {       
+        console.log(e.target);
+              
+        this.setState({topic:parseInt(e.target.value),topicText:e.target.id})
     }
 
     handleText = (e) => {
@@ -49,9 +53,11 @@ class Contact extends Component{
     }
 
     render(){
+        console.log(this.state.topicText);
+        
         return(
         <div className="container contact-container flex">
-            <div className="info-container equal-child">
+            <Fade><div className="info-container equal-child">
                 <h4>Contact info</h4>
                 {/* <hr/> */}
                 <div>Address:</div>
@@ -68,19 +74,20 @@ class Contact extends Component{
                 <div className="opening-hours flex"><div className="oh-day">Sat: </div><div className="oh-hour" style={{color:'red'}}>Closed</div></div>
                 <div className="opening-hours flex"><div className="oh-day">Sun: </div><div className="oh-hour" style={{color:'red'}}>Closed</div></div>
                 <hr/>
-            </div>
+            </div></Fade>
             <span className="bp3-navbar-divider"></span>
-            <div className="contact-form-container">
+            <Fade><div className="contact-form-container">
                 <h3>Contact Form</h3>
                 <RadioGroup
                     name="Choose topic"
                     onChange={this.handleTopicChange}
                     selectedValue={this.state.topic}
                     inline
-                >
-                    <Radio label="Bug" value={1}/>
-                    <Radio label="Question" value={2} />
-                    <Radio label="Other.." value={3} />
+                >   
+                    <div>Choose a topic</div>
+                    <Radio label="Bug" id="Bug" value={1}/>
+                    <Radio label="Question" id="Question" value={2} />
+                    <Radio label="Other.." id="Other.." value={3} />
                 </RadioGroup>
                 <InputGroup
                     id={"email"}
@@ -98,7 +105,8 @@ class Contact extends Component{
                     large
                 />
                 <Button type="" onClick={this.submitContactForm}>Submit form</Button>
-            </div>
+            </div></Fade>
+            <Chat/>
         </div>
     )}
 }
