@@ -310,15 +310,17 @@ export const findNodeIndex = (nodes, nodeName) => {
 }
 // x=Rcosϕcosλ,y=Rcosϕsinλ,z=Rsinϕ
 export const angleBetweenPoints=(p1,p2)=>{
-    const dLng = p2.longitude - p1.longitude;
+    
+    const dLng = p2.lng - p1.lng;
     const x = Math.cos(p2.lat)*Math.sin(dLng);
     const y = Math.cos(p1.lat)*Math.sin(p2.lat)-Math.sin(p1.lat)*Math.cos(p2.lat)*Math.cos(dLng)
+    console.log(x,y);
     
     let bearing = Math.atan2(x,y);
-
+    
     bearing = toDegrees(bearing);
     bearing = (bearing + 360) % 360;
-    bearing = 360-bearing;
+    bearing = 360-bearing;    
     return bearing;
 }
 

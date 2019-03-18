@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import { InputGroup, Button, Intent, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
+import { InputGroup, Button, Intent, Popover, PopoverInteractionKind, Position, Classes } from '@blueprintjs/core';
 import { createUser } from '../../actions/login';
 import {toast} from 'react-toastify'
 import Notify from '../SubComponents/Notify';
@@ -16,7 +16,13 @@ class SignUp extends Component{
             password:"",
             veripassword:"",
             lp:"",
+            carName:"",
+            open:false,
         }
+    }
+
+    componentDidMount(){
+        // window.addEventListener('click', this.closePopover)
     }
 
     createUser = (e) =>{
@@ -35,7 +41,8 @@ class SignUp extends Component{
                 autoClose:1500
             });
         }else{
-            this.props.createUser(this.state.email,this.state.password)
+            this.props.createUser(this.state.email,this.state.password, this.state.lp, this.state.carName)
+            this.setState({open:false})
         }
     }
 
@@ -43,13 +50,31 @@ class SignUp extends Component{
         this.setState({[e.target.id]:e.target.value})
     }
 
+    openPopover = () =>{
+        if (window.scrollY!==0) {
+            window.scrollTo({top:0, left:0, behavior:'smooth'});
+            setTimeout(() => {
+                this.setState({open:!this.state.open})                    
+            }, 830);
+        }else{
+            this.setState({open:!this.state.open})    
+        }
+    }
+    
+    closePopover = (e) => {
+        this.setState({open:false})
+    }
+
     render(){
         return(
+            <React.Fragment>
             <Popover
                 interactionKind={PopoverInteractionKind.CLICK}
                 popoverClassName="bp3-popover-content-sizing"
                 position={Position.BOTTOM}
-                target={<button className="bp3-button bp3-minimal bp3-icon-new-person">Sign Up</button>}
+                target={<Button style={{marginLeft:'10px'}} onClick={this.openPopover} intent="primary">Sign Up</Button>}
+                isOpen={this.state.open}
+                onClose={this.closePopover}
                 content={
                 <form
                 onSubmit={this.createUser}
@@ -73,7 +98,6 @@ class SignUp extends Component{
                         type={'password'}
                         leftIcon={"lock"}
                         placeholder={"Password"}
-                        intent={Intent.PRIMARY}
                         onChange={this.handleChange}
                         value={this.state.password}
                     />
@@ -83,7 +107,6 @@ class SignUp extends Component{
                         type={'password'}
                         leftIcon={"lock"}
                         placeholder={"Verify password"}
-                        intent={Intent.PRIMARY}
                         onChange={this.handleChange}
                         value={this.state.veripassword}
                     />
@@ -93,15 +116,25 @@ class SignUp extends Component{
                         type={'text'}
                         leftIcon={"drive-time"}
                         placeholder={"License plate"}
-                        intent={Intent.PRIMARY}
                         onChange={this.handleChange}
                         value={this.state.lp}
+                    />
+                    <InputGroup
+                        id={'carName'}
+                        className="popover-input"
+                        type={'text'}
+                        leftIcon={"plus"}
+                        placeholder={"Car name (optional)"}
+                        onChange={this.handleChange}
+                        value={this.state.carName}
                     />
                 <Button type="submit" role="button">Create</Button>
                 {this.state.notify?<Notify value="Password does not match"/>:null}
                 </form>
                 }
-            />
+                />
+                {this.props.login?null:<Button className="join-btn" intent="success" onClick={this.openPopover}>Join now!</Button>}
+            </React.Fragment>
         )}
 }
 

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import { Link, Element , Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
-
 import {Fade} from 'react-reveal'
-import Hero from '../SubComponents/Hero';
 import { changeHeaderBkg } from '../../actions/global';
 import HomeText from '../SubComponents/HomeText';
-import {Icon} from '@blueprintjs/core'
+import {Icon, Button} from '@blueprintjs/core'
 
 class Home extends Component{
 
@@ -87,8 +84,10 @@ class Home extends Component{
 
 const mapStateToProps = (state) => {    
     const { headerBkg } = state.global;
+    const { login } = state.data;
     return {
-        headerBkg
+        headerBkg,
+        login
     }
 }
   

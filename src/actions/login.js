@@ -16,16 +16,16 @@ export const changeLogin = (status) => async dispatch =>{
     
 }
 
-export const createUser = (email,password) => async dispatch=>{  
+export const createUser = (email,password, lp, carName) => async dispatch=>{  
     auth.createUserWithEmailAndPassword(email,password)
-    // .then(()=>{
-    //     auth.signInWithEmailAndPassword(email,password)
-    // })
     .then(()=>{ 
         fsRef.collection("users").doc(auth.currentUser.uid).set({
             email:email,
             username:email.split("@")[0],
             uid:auth.currentUser.uid,
+        })
+        fsRef.collection("users").doc(auth.currentUser.uid).collection("cars").doc(lp).set({
+            lp,carName,
         })
     })
     .catch((err) =>{

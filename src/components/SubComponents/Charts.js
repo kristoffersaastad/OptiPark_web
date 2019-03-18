@@ -249,28 +249,19 @@ class Charts extends Component {
   render() {
     return (
       <React.Fragment>
-
-        <div className="chart">
           <h2>{this.state.loading ? <div class="lds-ring"><div></div><div></div><div></div><div></div></div> : null}</h2>
           <div className="subtext__container">
             {this.state.loading ?  null : <div className="subtext">Parking lot demand</div>}
           </div>
-          <div id="chartdiv" style={{ height: "500px" }}></div>
-          <div className="subtext__container" style={{marginTop: "50px", marginBottom: "0px"}}>
+          <div className="chart1" id="chartdiv" style={{ height: "150px", maxWidth:'30vw' }}></div>
+          <div className="subtext__container" style={{marginTop: "10px", marginBottom: "0px"}}>
             {this.state.loading ?  null : <div className="subtext">Number of available spots</div>}
           </div>
             <form className="flex" onSubmit={this.handleSubmit} >
               <InputGroup type="text" placeholder="Enter backwards"  id="daysBackward" onChange={this.handleChange} />
               <InputGroup type="text" placeholder="Enter forwards" id="daysForward" onChange={this.handleChange}  />
-
-              <Button variant="primary" type="submit">
-                Make changes
-              </Button>
             </form>
-          <div id="chartdiv2" style={{ width: "90%", height: "500px" }}></div>
-
-        </div>
-
+          <div id="chartdiv2" style={{ width: "90%", height: "200px" }}></div>
       </React.Fragment>
     );
   }

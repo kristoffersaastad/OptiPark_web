@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 import MapDrawer from '../SubComponents/MapDrawer';
 import rightIcon from '../../images/rightIcon.png';
 import leftIcon from '../../images/leftIcon.png';
+import Charts from '../SubComponents/Charts';
 
 const userIcon = new L.Icon({
     iconUrl:require('../../images/carIcon2.png'),
@@ -64,6 +65,8 @@ class MapComponent extends Component{
         const assigned = assignSensor(this.state.g,this.props.sensors,this.props.support,[this.state.currPos.lat,this.state.currPos.lng])
         const spot = assigned[0];
         const path  = assigned[1];
+        console.log(spot,path);
+        
         if(spot.length===0&& path.length===0){
             toast("The parking lot is full",{
                 type: toast.TYPE.ERROR,
@@ -81,6 +84,7 @@ class MapComponent extends Component{
         //Finding point coordinates to find angle between first->second, and second-> third
         let p1 = this.getNodeCoord(path[1][0]);
         let p2 = this.getNodeCoord(path[2][0]);
+        console.log(p1,p2);
         let dir1 = getDirection(angleBetweenPoints(this.state.currPos,p1));
         let dir2 = getDirection(angleBetweenPoints(p1,p2));
         console.log(dir1, dir2);
@@ -138,16 +142,23 @@ class MapComponent extends Component{
         this.setState({currPos:{lat, lng}})
     }
 
+    showNode = (e) => {
+        console.log(e.target.options.id);
+        
+    }
 
     render(){
         if (!this.props.login) {
             return <Redirect to="/"/>
         }
         return(
-        <div className="map-container">
+        <div className="map-container flex">
+            <div className="chart-container">
+                <Charts/>
+            </div>
             {this.state.loadingMap?
             <div className="progressBar">Loading map<ProgressBar/></div>
-            :<Map bounds={this.state.bbox} style={{width:"100%", height:'100%', zIndex:2}} onClick={this.changeUserPos}>
+            :<Map bounds={this.state.bbox} style={{width:"100%", height:'100%', zIndex:2,flex:0.7, minWidth:'70%'}} onClick={this.changeUserPos}>
                 <TileLayer
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -155,26 +166,35 @@ class MapComponent extends Component{
                 {this.state.path&&this.state.latlngs?
                     <Polyline
                     positions={this.state.latlngs}
+                    weight={5}
                     />
                 :null}
                 {Object.keys(this.props.sensors).map((item)=>
-                    <Marker id={this.props.sensors[item].properties.name} key={item} position={[this.props.sensors[item].geometry.coordinates[0],this.props.sensors[item].geometry.coordinates[1]]} icon={this.props.sensors[item].properties.status===0?sensorIconAvaliable:sensorIconTaken}></Marker>
+                    <Marker id={this.props.sensors[item].properties.name} onClick={this.showNode} key={item} position={[this.props.sensors[item].geometry.coordinates[0],this.props.sensors[item].geometry.coordinates[1]]} icon={this.props.sensors[item].properties.status===0?sensorIconAvaliable:sensorIconTaken}></Marker>
                 )}
                 {this.state.path&&this.state.latlngs?
-                    Object.keys(this.state.path).map((item)=>{
-                        let coord = []
-                        
-                        if (this.state.path[item][0].split("")[0]==="h") {
-                            coord = findNodeCoord(this.props.support,this.state.path[item][0])
+                    Object.keys(this.state.path).map((key)=>{
+                        let coord = []                        
+                        if (this.state.path[key][0].split("")[0]==="h") {
+                            coord = findNodeCoord(this.props.support,this.state.path[key][0])
+                            let index = findNodeIndex(this.props.support,this.state.path[key][0])
+                            let name = this.props.support[index].properties.name;
+                            
                             return(
-                            <Marker id={this.props.support[item].properties.name} key={"supp"+item} position={{lat:coord[0],lng:coord[1]}} icon={nodeIcon}/>
+                            <Marker id={name} onClick={this.showNode} key={"supp"+key} position={{lat:coord[0],lng:coord[1]}} icon={nodeIcon}/>
                             )
                         }
                     })
                 :null}
                 <Marker icon={userIcon} position={this.state.currPos}/>
             </Map>}
-            {this.state.directionIcon?<img className="direction-icon" src={this.state.directionIcon}/>:null}
+            {this.state.totDistance?<div className="total-distance"></div>:null}
+            {this.state.directionIcon&&this.state.totDistance&&this.state.currDistance?
+            <div className="direction-container">
+                <img className="direction-icon" src={this.state.directionIcon}/>
+                <div className="distance-curr">{"in "+this.state.currDistance.toFixed(0)+" meters"}</div>
+                <div className="distance-tot">{"Distance to goal: "+this.state.totDistance.toFixed(0)+"m"}</div>
+            </div>:null}
             <MapDrawer/>
         </div>
     )}

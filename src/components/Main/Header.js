@@ -46,14 +46,13 @@ class Header extends Component{
     render(){
         return(
             <Fade>
-            <nav className={"bp3-navbar bp3-dark "} style={this.props.headerBkg?{color: '#f5f8fa',backgroundColor:'rgba(0,0,0,0)', boxShadow:'none'}:{color: '#f5f8fa',backgroundColor:'',boxShadow:''}}>
+            <nav className={"bp3-navbar bp3-dark header"} style={this.props.headerBkg?{color: '#f5f8fa',fontWeight:600,backgroundColor:'rgba(0,0,0,0)', boxShadow:'none'}:{color: '#f5f8fa',backgroundColor:'',boxShadow:''}}>
                 <div style={{margin: '0 auto', width: '100%'}}>
                     <div className="bp3-navbar-group bp3-align-left">
-                        <div className="bp3-navbar-heading">OptiPark</div>
+                        <StyledLink to="/" content={<div className="bp3-navbar-heading">OptiPark</div>}></StyledLink>
                     </div>
                     <div className="bp3-navbar-group bp3-align-right">
                         <StyledLink to="/" content={<button className="bp3-button bp3-minimal bp3-icon-home">Home</button>}/>
-                        <StyledLink to="/statistics" content={<button className="bp3-button bp3-minimal bp3-icon-chart">Statistics</button>}/>
                         <StyledLink to="/contact" content={<button className="bp3-button bp3-minimal bp3-icon-annotation">Contact</button>}/>
 
                         <span className="bp3-navbar-divider"></span>
