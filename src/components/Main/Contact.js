@@ -5,6 +5,7 @@ import {TextArea, InputGroup, Radio, RadioGroup, Button, Icon} from '@blueprintj
 import { submitContactForm } from '../../actions/global';
 import { Fade } from 'react-reveal'
 import Chat from '../SubComponents/Chat';
+import { showJoin } from '../../actions/global';
 
 class Contact extends Component{
 
@@ -22,6 +23,8 @@ class Contact extends Component{
         if (this.props.userInfo) {
             this.setState({email:this.props.userInfo.email})
         }
+        this.props.showJoin(false);
+
     }
 
     componentDidUpdate(prevProps){
@@ -121,7 +124,7 @@ const mapStateToProps = (state) => {
 }
   
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ submitContactForm }, dispatch);
+    return bindActionCreators({ submitContactForm, showJoin }, dispatch);
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(Contact);

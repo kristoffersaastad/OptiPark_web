@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import { Icon , InputGroup, Spinner } from '@blueprintjs/core';
 import { newChat, addPost, closeChat } from '../../actions/chat';
 import $ from 'jquery'
+import Fade from 'react-reveal'
 
 class Chat extends Component{
 
@@ -64,7 +65,8 @@ class Chat extends Component{
             // LAG EGEN POPOVER
             <React.Fragment>
                 {this.props.userInfo?<Icon icon="chat" onClick={this.state.show?this.closeChat:this.startChat} intent="primary" iconSize="22" className="chat-icon"/>:null}
-                {this.state.show?<div className="chat-container">
+                {this.state.show?<Fade right><div className="chat-container">
+                    <div style={{textAlign:'end', color:'white', cursor:'pointer', marginBottom:'5pxw'}} onClick={this.closeChat}><Icon icon="cross" /></div>
                     <div className="chat-window" id="chat-window">
                         {this.props.chatMessages?
                             Object.keys(this.props.chatMessages).map((item)=>
@@ -88,7 +90,7 @@ class Chat extends Component{
                     <form onSubmit={this.addMessage}>
                         <InputGroup placeholder="Start say something" value={this.state.text} onChange={this.handleText}/>
                     </form>
-                </div>:null}
+                </div></Fade>:null}
             </React.Fragment>
         )}
 }

@@ -5,6 +5,8 @@ import {Fade} from 'react-reveal'
 import { changeHeaderBkg } from '../../actions/global';
 import HomeText from '../SubComponents/HomeText';
 import {Icon, Button} from '@blueprintjs/core'
+import { showJoin } from '../../actions/global';
+
 
 class Home extends Component{
 
@@ -25,6 +27,7 @@ class Home extends Component{
         this.props.changeHeaderBkg(true)
         window.addEventListener('scroll', this.handleScroll)
         window.addEventListener('mousemove',this.handleMouseMove)
+        this.props.showJoin(true);
     }
     componentWillUnmount(){
         this.props.changeHeaderBkg(false)
@@ -65,7 +68,6 @@ class Home extends Component{
     }
 
     render(){
-        console.log(this.state.showUp);
         
         return(
         <div className="home-container">
@@ -92,7 +94,7 @@ const mapStateToProps = (state) => {
 }
   
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ changeHeaderBkg }, dispatch);
+    return bindActionCreators({ changeHeaderBkg, showJoin }, dispatch);
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

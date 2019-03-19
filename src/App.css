@@ -45,13 +45,13 @@ body{
 }
 /* HOME */
 .laptop{
-  width: auto;
-  height: 300px;
+  width: 40vw;
+  height: auto;
 }
 
 .book{
-  width: auto;
-  height: 300px;
+  width: 40vw;
+  height: auto;
 }
 
 .text-right{
@@ -221,6 +221,7 @@ body{
 
 .user-info{
   height: 80%;
+  text-align: start;
 }
 
 .info-wrapper{
@@ -237,6 +238,15 @@ body{
 }
 .info-wrapper .info{
   text-align: start;
+}
+
+.user-info-field{
+  margin:10px;
+}
+.user-info-label{
+  font-weight:650;
+  text-align: start;
+  justify-content: start;
 }
 
 
@@ -291,8 +301,8 @@ body{
   position: absolute;
   box-shadow: 5px 5px 14px -4px rgba(0,0,0,1);
   border-radius:10px;
-  right:40px;
-  bottom: 40px;
+  right:30px;
+  bottom: 30px;
   height: 55vh;
   padding: 5px;
   width: 30vw;
@@ -452,7 +462,7 @@ body{
   cursor: pointer;
   background-color:rgba(236, 236, 236, 1);
   height: calc(100% - 100px);
-  width:10px;
+  width:13px;
   border-right: 0;
   border-bottom-left-radius: 10px;
   border-top-left-radius: 10px;
@@ -461,7 +471,7 @@ body{
   text-align:center;
 }
 .drawer-teaser:hover{
-  width:12px;
+  width:15px;
 }
 
 .draw-icon{

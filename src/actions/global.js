@@ -58,6 +58,8 @@ export const bookSpot = (car, date) => async dispatch => {
 }
 
 export const deleteBooking = (id) => async dispatch =>{
+    console.log(id);
+    
     fsRef.collection("users").doc(auth.currentUser.uid).collection("bookings").doc(""+id).delete()
     .then(()=>{
         dispatch(changeToaster("Booking deleted",true, "success", 1500))
@@ -71,5 +73,14 @@ export const changeToaster = (message, show, toastType, time) => dispatch =>{
     dispatch({
         type:'TOASTER',
         message, show, toastType, time
+    })
+}
+
+export const showJoin = (status) => dispatch => {
+    console.log(status);
+    
+    dispatch({
+        type:'SHOW-JOIN',
+        payload:status,
     })
 }

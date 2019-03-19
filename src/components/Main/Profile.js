@@ -7,7 +7,7 @@ import { Col } from 'react-bootstrap'
 import { addCar, deleteCar, deleteBooking } from '../../actions/global';
 import { Link } from 'react-router-dom'
 import { Fade } from 'react-reveal'
-
+import { updateUserInfo } from '../../actions/login';
 
 class Profile extends Component{
 
@@ -17,6 +17,17 @@ class Profile extends Component{
         this.state = {
             carName:"",
             regNr:"",
+            email:"",
+            username:"",
+        }
+    }
+
+    componentDidUpdate(prevProps){
+        if (prevProps.userInfo!==this.props.userInfo) {
+            this.setState({
+                email:this.props.userInfo.email,
+                username: this.props.userInfo.username,
+            })
         }
     }
 
@@ -56,6 +67,11 @@ class Profile extends Component{
         this.props.deleteBooking(target.id);   
     }
 
+    updateUserInfo = (e) => {
+        e.preventDefault();        
+        this.props.updateUserInfo(this.state.email, this.state.username);
+    }
+
     render(){
         return(
             
@@ -65,9 +81,31 @@ class Profile extends Component{
                 <div className="profile-child">
                     <Icon icon="user"/> User info
                     <Divider/>
-                    <div className="user-info">
-                        
-                    </div>
+                    <form className="user-info" onSubmit={this.updateUserInfo}>
+                        <label to="email" className="user-info-label">Email:</label>
+                        <InputGroup
+                            id={'email'}
+                            type={'email'}
+                            className="user-info-field"
+                            placeholder={'Email'}
+                            leftIcon={"user"}
+                            onChange={this.handleInput}
+                            value={this.state.email}
+                            autoFocus
+                        />
+                        <label to="usename" className="user-info-label">Username:</label>
+                        <InputGroup
+                            id={'username'}
+                            type={'text'}
+                            className="user-info-field"
+                            placeholder={'Username'}
+                            leftIcon={"id-number"}
+                            onChange={this.handleInput}
+                            value={this.state.username}
+                            autoFocus
+                        />
+                        <Button type="submit" intent="primary">Update info</Button>
+                    </form>
                 </div>
                 <div className="profile-child">
                     <Icon icon="timeline-events"/>Bookings
@@ -119,7 +157,6 @@ class Profile extends Component{
                                 <div>{"License: "+this.props.userCars[item].lp}</div>
                                 {this.props.userCars[item].carName?<div>{"Name: "+this.props.userCars[item].carName}</div>:null}
                             </div>
-                            {console.log(this.props.userCars[item].lp)}
                             <div className="delete-car" id={this.props.userCars[item].lp} onClick={this.deleteCar} style={{flex:0.1}}><Icon icon="trash"/></div>
                         </div>
                         </Fade>
@@ -141,7 +178,7 @@ const mapStateToProps = (state) => {
 }
   
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ addCar, deleteCar, deleteBooking }, dispatch);
+    return bindActionCreators({ updateUserInfo, addCar, deleteCar, deleteBooking }, dispatch);
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

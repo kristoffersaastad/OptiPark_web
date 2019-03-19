@@ -37,12 +37,12 @@ class HomeText extends Component{
             </div>
             <div className="sub-container-home">
                 <Element className="text-container-home flex" name="div0">
+                    <Fade left><div className="text-right" style={{flex:0.5}}>
+                        The simple usage of the map will direct you to the closest available parking spot.
+                    </div></Fade>
                     <div style={{flex:0.5}}>
                         <Fade bottom><img src={laptopPhone} className="laptop"/></Fade>
                     </div>
-                    <Fade><div className="text-right" style={{flex:0.5}}>
-                        The simple usage of the map will direct you to the closest available parking spot.
-                    </div></Fade>
                 </Element>
                 <Element className="text-container-home colored-text-container flex" name="div1">
                     <div style={{flex:0.5}}>

@@ -66,6 +66,16 @@ export const signInUser = (email,password) => async dispatch => {
   
 }
 
+export const updateUserInfo = (email, username) => async dispatch => {
+
+    fsRef.collection("users").doc(auth.currentUser.uid).update({
+        email,
+        username,
+    })
+    auth.currentUser.updateEmail(email)
+}
+
+
 export const signOutUser = () => async dispatch => {
     auth.signOut().then(()=>{
         dispatch({

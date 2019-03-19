@@ -53,6 +53,11 @@ const global = (state = defaultState, action) => {
                 ...state,
                 allChats:action.payload,
             }
+        case 'SHOW-JOIN':
+            return{
+                ...state,
+                showJoin:action.payload,
+            }
         default:        
             return state;
     }

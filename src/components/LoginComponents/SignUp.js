@@ -21,9 +21,7 @@ class SignUp extends Component{
         }
     }
 
-    componentDidMount(){
-        // window.addEventListener('click', this.closePopover)
-    }
+    
 
     createUser = (e) =>{
         e.preventDefault();
@@ -66,6 +64,10 @@ class SignUp extends Component{
     }
 
     render(){
+        console.log(this.props.showJoin);
+        
+        
+        
         return(
             <React.Fragment>
             <Popover
@@ -133,15 +135,17 @@ class SignUp extends Component{
                 </form>
                 }
                 />
-                {this.props.login?null:<Button className="join-btn" intent="success" onClick={this.openPopover}>Join now!</Button>}
+                {this.props.showJoin&&!this.props.login?<Button className="join-btn" intent="success" onClick={this.openPopover}>Join now!</Button>:null}
             </React.Fragment>
         )}
 }
 
 const mapStateToProps = (state) => {    
     const { login } = state.data;
+    const { showJoin } = state.global;
     return {
-        login
+        login,
+        showJoin
     }
 }
   
