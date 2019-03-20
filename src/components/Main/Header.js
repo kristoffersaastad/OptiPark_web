@@ -34,7 +34,7 @@ class Header extends Component{
                 window.localStorage.setItem("LOGIN","yes")
                 this.props.fetchInfo();
                 this.props.fetchCars();
-                this.props.fetchBookings();
+                this.props.fetchBookings("Library");
                 
             }else{
                 this.props.changeLogin(false);
@@ -49,7 +49,7 @@ class Header extends Component{
             <nav className={"bp3-navbar bp3-dark header"} style={this.props.headerBkg?{color: '#f5f8fa',fontWeight:600,backgroundColor:'rgba(0,0,0,0)', boxShadow:'none'}:{color: '#f5f8fa',backgroundColor:'',boxShadow:''}}>
                 <div style={{margin: '0 auto', width: '100%'}}>
                     <div className="bp3-navbar-group bp3-align-left">
-                        <StyledLink to="/" content={<div className="bp3-navbar-heading">OptiPark</div>}></StyledLink>
+                        <StyledLink to="/" content={<div className="bp3-navbar-heading"><b><span style={{color:'#4580E6'}}>Opti</span>Park</b></div>}></StyledLink>
                     </div>
                     <div className="bp3-navbar-group bp3-align-right">
                         <StyledLink to="/" content={<button className="bp3-button bp3-minimal bp3-icon-home">Home</button>}/>

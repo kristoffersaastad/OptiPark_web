@@ -42,3 +42,14 @@ export const assignSpot = (spot, path) => dispatch => {
         }
     })
 }
+
+export const changeSpotStatus = (parkinglot, spot, status) => async dispatch =>{
+    fsRef.collection("parkinglots").doc(parkinglot).get().
+    then((doc)=>{
+        let json = JSON.parse(doc.data().json);
+        json.sensors[spot].properties.status = status;
+        fsRef.collection("parkinglots").doc(parkinglot).update({
+            json:JSON.stringify(json), num_spots:doc.data().num_spots-1,
+        })
+    })
+}

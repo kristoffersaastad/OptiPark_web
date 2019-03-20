@@ -19,9 +19,12 @@ class MapDrawer extends Component{
         }
     }
 
+    componentWillMount(){        
+        this.setState({selectedCar:this.props.userCars[0].lp})
+    }
+
     checkTarget = (e) => {
         let type = e.target.tagName;    
-        console.log(type);
             
         if (type==="path") {
             return e.target.parentElement.parentElement.parentElement

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom'
 
 import { Icon, Divider, Button, InputGroup, ProgressBar, Spinner } from '@blueprintjs/core'
 import { Col } from 'react-bootstrap'

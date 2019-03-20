@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom'
 
 import { Spinner, InputGroup } from '@blueprintjs/core'
 import { getAllChats, getChat, addPost } from '../../actions/chat';
@@ -26,6 +27,7 @@ class Admin extends Component{
         if(prevProps.chatMessages!==this.props.chatMessages){
             this.scrollSmoothToBottom();
         }
+        if(prevProps.allChats!==this.props.allChats)this.scrollSmoothToBottomChats();
     }
 
     getCurrChat = (e) => {
@@ -35,8 +37,10 @@ class Admin extends Component{
 
     addMessage = (e) => {
         e.preventDefault();
-        this.props.addPost(this.state.currInit, this.state.text, this.props.userInfo.uid)
-        this.setState({text:""})
+        if (this.state.text!=="") {
+            this.props.addPost(this.state.currInit, this.state.text, this.props.userInfo.uid)
+            this.setState({text:""})
+        }
     }
 
     handleText = (e) => {
@@ -52,12 +56,19 @@ class Admin extends Component{
         }, 50);
     }
 
+    scrollSmoothToBottomChats = () => {
+        var div = document.getElementById("display-chats");
+        $('#display-chats').animate({
+           scrollTop: div.scrollHeight - div.clientHeight
+        }, 50);
+    }
+
     render(){
         return(
             <div className="admin-container flex">
                 {this.props.allChats?
                 <React.Fragment>
-                <div className="display-chats" style={{flex:1}}>
+                <div className="display-chats" id="display-chats" style={{flex:1}}>
                     {Object.keys(this.props.allChats).map(item=>
                         <div key={"chat-"+item} id={this.props.allChats[item].initDate} className="chat-field" onClick={this.getCurrChat}>{new Date(this.props.allChats[item].initDate).toLocaleString().slice(0,new Date(this.props.allChats[item].initDate).toLocaleString().length-3)+"  "+this.props.allChats[item].users.name}</div>
                     )}

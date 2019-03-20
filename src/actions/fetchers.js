@@ -24,11 +24,19 @@ export const fetchCars = () => async dispatch => {
     })
 }
 
-export const fetchBookings = () => async dispatch=> {
+export const fetchBookings = (parkinglot) => async dispatch=> {
     fsRef.collection("users").doc(auth.currentUser.uid).collection("bookings").onSnapshot((docs)=>{
         let bookings = []
         docs.forEach(doc=>{
             let data = doc.data();
+            if(data.data>new Date().getTime()){
+                fsRef.collection("parkinglots").doc(parkinglot).get()
+                .then((doc)=>{
+                    fsRef.collection("parkinglots").doc(parkinglot).update({
+                        num_spots:doc.num_spots-1,
+                    })
+                })
+            }
             data.niceDate = new Date(data.date).toLocaleString();
             data.niceDate = data.niceDate.slice(0,data.niceDate.length-3)
             bookings.push(data)

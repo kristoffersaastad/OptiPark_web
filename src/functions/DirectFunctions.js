@@ -4,7 +4,7 @@ export const latlngDist = (from, to) => {
     return Math.sqrt(Math.pow(from[0]-to[0],2)+Math.pow(from[1]-to[1],2))
 }
 
-export const distance = (from, to) =>{    
+export const distance = (from, to) =>{        
     let nfrom = [from[0]*Math.PI/180, from[1]*Math.PI/180];
     let nto  = [to[0]*Math.PI/180,to[1]*Math.PI/180];
 
@@ -314,7 +314,6 @@ export const angleBetweenPoints=(p1,p2)=>{
     const dLng = p2.lng - p1.lng;
     const x = Math.cos(p2.lat)*Math.sin(dLng);
     const y = Math.cos(p1.lat)*Math.sin(p2.lat)-Math.sin(p1.lat)*Math.cos(p2.lat)*Math.cos(dLng)
-    console.log(x,y);
     
     let bearing = Math.atan2(x,y);
     

@@ -36,8 +36,11 @@ class Chat extends Component{
 
     addMessage = (e) => {
         e.preventDefault();
-        this.props.addPost(this.props.chatInfo.initDate, this.state.text, this.props.userInfo.uid)
-        this.setState({text:""})
+
+        if (this.state.text!=="") {
+            this.props.addPost(this.props.chatInfo.initDate, this.state.text, this.props.userInfo.uid)
+            this.setState({text:""})
+        }
     }
 
     handleText = (e) => {
@@ -71,19 +74,19 @@ class Chat extends Component{
                         {this.props.chatMessages?
                             Object.keys(this.props.chatMessages).map((item)=>
                                 this.props.chatMessages[item].createdBy===this.props.userInfo.uid?
-                                <React.Fragment key={"m-"+item}>
+                                <div className="chat-message-wrapper" key={"m-"+item}>
                                 <div className="chat-message you">
                                     <div>{this.props.chatMessages[item].post}</div>
                                 </div>
                                 <div className="message-date-you">{"Sent: " + this.props.chatMessages[item].date}</div>
-                                </React.Fragment>
+                                </div>
                                 :
-                                <React.Fragment key={"m-"+item}>
+                                <div className="chat-message-wrapper" key={"m-"+item}>
                                 <div className="chat-message receiver">
                                     <div>{this.props.chatMessages[item].post}</div>
                                 </div> 
                                 <div className="message-date-receiver">{"Sent: " + this.props.chatMessages[item].date}</div>
-                                </React.Fragment>
+                                </div>
                             )
                         :<Spinner size={25}/>}
                     </div>

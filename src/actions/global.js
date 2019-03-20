@@ -77,7 +77,6 @@ export const changeToaster = (message, show, toastType, time) => dispatch =>{
 }
 
 export const showJoin = (status) => dispatch => {
-    console.log(status);
     
     dispatch({
         type:'SHOW-JOIN',

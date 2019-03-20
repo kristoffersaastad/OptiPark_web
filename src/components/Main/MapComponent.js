@@ -11,6 +11,7 @@ import MapDrawer from '../SubComponents/MapDrawer';
 import rightIcon from '../../images/rightIcon.png';
 import leftIcon from '../../images/leftIcon.png';
 import Charts from '../SubComponents/Charts';
+import { changeSpotStatus } from '../../actions/geo';
 
 const userIcon = new L.Icon({
     iconUrl:require('../../images/carIcon2.png'),
@@ -65,7 +66,6 @@ class MapComponent extends Component{
         const assigned = assignSensor(this.state.g,this.props.sensors,this.props.support,[this.state.currPos.lat,this.state.currPos.lng])
         const spot = assigned[0];
         const path  = assigned[1];
-        console.log(spot,path);
         
         if(spot.length===0&& path.length===0){
             toast("The parking lot is full",{
@@ -73,8 +73,10 @@ class MapComponent extends Component{
                 autoClose: 1500,
             })
         }
-                
-        if (distance([this.state.currPos.lng, this.state.currPos.lng],findNodeCoord(this.props.sensors,spot))<4) {
+        
+        if (distance([this.state.currPos.lat, this.state.currPos.lng],findNodeCoord(this.props.sensors,spot))<4) {
+            console.log("CHANGESPOT");
+            
             this.props.changeSpotStatus("Library", findNodeIndex(this.props.sensors,spot),1);
             this.setState({path:null, direction:null, currDistance:null, spot, totDistance:null,showDistance:false, latlngs:null})
             return null;
@@ -84,10 +86,8 @@ class MapComponent extends Component{
         //Finding point coordinates to find angle between first->second, and second-> third
         let p1 = this.getNodeCoord(path[1][0]);
         let p2 = this.getNodeCoord(path[2][0]);
-        console.log(p1,p2);
         let dir1 = getDirection(angleBetweenPoints(this.state.currPos,p1));
         let dir2 = getDirection(angleBetweenPoints(p1,p2));
-        console.log(dir1, dir2);
         
         let direction = determimeDirection(dir1,dir2); 
         
@@ -138,7 +138,8 @@ class MapComponent extends Component{
 
     changeUserPos = (map) => {
         const lat = map.latlng.lat;
-        const lng = map.latlng.lng;        
+        const lng = map.latlng.lng;  
+              
         this.setState({currPos:{lat, lng}})
     }
 
@@ -212,7 +213,7 @@ const mapStateToProps = (state) => {
 }
   
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ }, dispatch);
+    return bindActionCreators({ changeSpotStatus }, dispatch);
 }
   
 export default connect(mapStateToProps, mapDispatchToProps)(MapComponent);

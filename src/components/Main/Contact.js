@@ -34,7 +34,7 @@ class Contact extends Component{
     }
 
     submitContactForm = () => {
-        if(!this.props.showToast){
+        if(!this.props.showToast&&this.state.text!==""){
             this.props.submitContactForm(this.state.email, this.state.topicText, this.state.text, new Date().getTime())        
             this.setState({
                 text : "",
@@ -45,9 +45,7 @@ class Contact extends Component{
         }
     }
 
-    handleTopicChange = (e) => {       
-        console.log(e.target);
-              
+    handleTopicChange = (e) => {                     
         this.setState({topic:parseInt(e.target.value),topicText:e.target.id})
     }
 
@@ -55,9 +53,7 @@ class Contact extends Component{
         this.setState({[e.target.id]:e.target.value})
     }
 
-    render(){
-        console.log(this.state.topicText);
-        
+    render(){        
         return(
         <div className="container contact-container flex">
             <Fade><div className="info-container equal-child">
